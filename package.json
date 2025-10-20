@@ -3,9 +3,10 @@
   "version": "1.0.0",
   "description": "Backend for the blog application",
   "main": "index.js",
-  "scripts": {
-    "dev": "nodemon index.js"
-  },
+ "scripts": {
+  "start": "node index.js",
+  "dev": "nodemon index.js"
+},
   "author": "",
   "license": "ISC",
   "dependencies": {
