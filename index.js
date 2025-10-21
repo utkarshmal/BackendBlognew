@@ -19,7 +19,7 @@ const PORT = process.env.PORT || 4000;
 // ==========================================================
 const allowedOrigins = [
     'http://localhost:3000',                  // Local Development
-    'https://frontend-blognew.vercel.app',    // Vercel Deployed Frontend URL
+    'https://frontend-blognew.vercel.app/',    // Vercel Deployed Frontend URL
 ];
 
 app.use(cors({
