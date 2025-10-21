@@ -29,4 +29,60 @@ if (RENDER_URL) allowedOrigins.push(RENDER_URL);
 app.use(cors({
   origin: function (origin, callback) {
     if (!origin) return callback(null, true); // Allow Postman/Server
-    const allowed = allowe
+    const allowed = allowedOrigins.some(o => origin.startsWith(o));
+    if (allowed) callback(null, true);
+    else {
+      console.error("🚫 CORS Blocked Origin:", origin);
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS']
+}));
+
+// ✅ Handle preflight (OPTIONS) requests globally
+app.options('*', cors());
+
+// ==========================================================
+// 🧩 Essential Middlewares
+// ==========================================================
+app.use(express.json());
+app.use(cookieParser());
+app.use(fileUpload({
+  useTempFiles: true,
+  tempFileDir: '/tmp/'
+}));
+
+// ==========================================================
+// 🧠 Connect Database & Cloudinary
+// ==========================================================
+database.connect();
+cloudinaryConnect();
+
+// ==========================================================
+// 🚏 Routes
+// ==========================================================
+app.use("/api/v1/posts", blogRoutes);
+app.use("/api/v1/auth", authRoutes);
+
+// ==========================================================
+// 🧪 CORS Test Route (optional for debugging)
+// ==========================================================
+app.get("/cors-test", (req, res) => {
+  res.json({ message: "✅ CORS is working fine!" });
+});
+
+// ==========================================================
+// 🏁 Default Route (for Render health check)
+// ==========================================================
+app.get("/", (req, res) => {
+  res.send("<h1>Backend API is running successfully on Render!</h1>");
+});
+
+// ==========================================================
+// 🚀 Start Server
+// ==========================================================
+app.listen(PORT, () => {
+  console.log(`✅ Server running successfully at port ${PORT}`);
+  console.log("Allowed Origins:", allowedOrigins);
+});
